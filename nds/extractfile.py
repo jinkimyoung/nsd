@@ -87,7 +87,7 @@ class ExtractFile():
 
     def _permission_recursive(self, tpath):
         if os.path.exists(tpath):
-            os.chmod(top_path, 0o777)
+            os.chmod(tpath, 0o777)
         
         for base, dirs, files in os.walk(tpath, topdown=False):
             for _dir in [os.path.join(base, d) for d in dirs]:

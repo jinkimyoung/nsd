@@ -24,14 +24,14 @@ class NetworkSync:
     def _connect(self):
         self._conn = sqlite3.connect(self._db)
         self._cursor = self._conn.cursor()
-        self._create_archeive()
+        self._create_syncdb()
 
     def _disconnect(self):
         if self._conn != None:
             self._conn.close()
             del(self._conn)
 
-    def create_syncdb(self):
+    def _create_syncdb(self):
         self._cursor.execute('CREATE TABLE IF NOT EXISTS flist(path text UNIQUE, size int)')
 
     def exist_in_syncdb(self, fname):
@@ -58,7 +58,7 @@ class NetworkSync:
     def list_in_dst(self):
         try:
             self._cursor.execute('SELECT path, size FROM flist')
-            dlist = { r[0]:r[1] for r in c.fetchall()  }
+            dlist = { r[0]:r[1] for r in self._cursor.fetchall() }
             print(dlist)
         except Exception as ERR:
             print('SQLITE3 - ERR : '+str(ERR))
@@ -75,7 +75,7 @@ class NetworkSync:
         dlist = self.list_in_dst()
 
         nlist = []
-        for fname in list_src.keys():
+        for fname in slist.keys():
             if dlist.get(fname) == None:
                 nlist.append(fname)
             elif slist[fname] != dlist[fname]:
@@ -94,13 +94,12 @@ class NetworkSync:
     def fsyncs(self):
         slist = self.determine_list_for_sync()
 
-        for fname in slist.keys():
+        for fname in slist:
             self.file_sync(self._src, self._dst, fname)
             #self.update_syncdb(fname, slist[fname]) if self.exist_in_syncdb(fname) else self.insert_syncdb(fname, slist[fname])
-            self.insert_or_update_syncdb(fname, slist[fname])
+            self.insert_or_update_syncdb(fname)
 
         return
-
 
     def UnitTest(self):
         self._src = r'\\localhost\abcde'
@@ -108,10 +107,10 @@ class NetworkSync:
 
         list_src = self.list_in_src()
         for fname in list_src.keys():
-            self.insert_syncdb(fname, list_src[fname])
+            self.insert_or_update_syncdb(fname)
             self.exist_in_syncdb(fname+'aa')
             self.exist_in_syncdb(fname)
-        self.set_sync_list()
+        self.determine_list_for_sync()
 
 
 #pwd = r'\\localhost\abcde'
