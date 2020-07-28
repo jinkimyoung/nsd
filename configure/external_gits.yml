@@ -2,10 +2,6 @@ nds:
   git: https://github.com/jinkimyoung/nsd.git
   description: network sync
 
-mastro:
-  git: https://github.com/jinkimyoung/maester.git
-  description: network sync2
-
 mysql:
     host: localhost
     user: root

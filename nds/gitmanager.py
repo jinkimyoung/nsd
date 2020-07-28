@@ -46,7 +46,6 @@ class GitManager():
                 o = repo.remotes.origin
                 o.pull()
                 print('repo pull is done')
-
         except Exception as ERR:
             print('[CRITICAL]In git_clone_or_pull() : '+str(ERR))
 
