@@ -1,2 +1,5 @@
 .venv
 .vscode
+
+# configure
+configure\envs.yml
