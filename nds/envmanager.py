@@ -30,7 +30,7 @@ class EnvManager():
     def save_genvs(self):
         try:
             with open(self._fyml, 'w') as file:
-                documents = yaml.dump(self._envs, file)
+                yaml.dump(self._envs, file)
         except Exception as ERR:
             print('[CRITICAL]In save_genvs() : '+str(ERR))
 
@@ -55,9 +55,6 @@ class EnvManager():
         self.find_latest_in_local()
         self.save_genvs()
 
-
-
-
-e = EnvManager()
-e.find_latest_in_local()
-e.save_genvs()
+#e = EnvManager()
+#e.find_latest_in_local()
+#e.save_genvs()

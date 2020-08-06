@@ -30,7 +30,7 @@ class ExtractFile():
         self._create_archeive()
 
     def _disconnect(self):
-        if self._conn != None:
+        if hasattr(self, '_conn') and self._conn != None:
             self._conn.close()
             del(self._conn)
 
