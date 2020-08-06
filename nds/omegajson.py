@@ -6,10 +6,30 @@ import json
 class OmegaJson:
     def __init__(self):
         self.omega_data = None
-        self._mandatories = ( 'accountName', 'ownerLocation1', 'subject', 'description',\
-                            'taxmanProductLine', 'problemCode1', 'problemCode2', 'problemCode3', \
-                            'caseNumber' , 'ccChipset', 'ownerEmail', 'customerProjectName', \
-                            'latestQualcommComment', 'softwareImageBuildInformation')
+        self._mandatories = ( 'caseNumber', 'accountName', 'customerProjectName', \
+                                'ownerName' , 'ownerEmail', 'ownerLocation1', 'createdDate', \
+                                'problemCode1', 'problemCode2', 'problemCode3', \
+                                'ccChipset', 'taxmanProductLine', \
+                                'subject', 'description',\
+                                'latestQualcommComment')
+
+        # JSON to SF
+        self._match_key = { 'caseNumber' : 'caseNumber', \
+                        'accountName' : 'AccountName', \
+                        'customerProjectName' : 'CustomerProjectName', \
+                        'ownerName' : 'OwnerName', \
+                        'ownerEmail' : 'OwnerEmail', \
+                        'ownerLocation1' : 'OwnerLocation1', \
+                        'createdDate' : 'CreatedDate', \
+                        'problemCode1' : 'ProblemCode1', \
+                        'problemCode2' : 'ProblemCode2', \
+                        'problemCode3' : 'ProblemCode3', \
+                        'ccChipset' : 'CcChipset', \
+                        'taxmanProductLine' : 'TaxmanProductLine', \
+                        'subject' : 'Subject', \
+                        'description' : 'Description', \
+                        'latestQualcommComment' : 'LatestQualcommComment'
+                    }
 
     def read_from_file(self, fpath):
         try:
@@ -35,12 +55,15 @@ class OmegaJson:
             print(f'[{key}] : [{value}]')
 
     def get_data(self):
-        return self.omega_data
+        print('In get_data()')
+        out = { self._match_key[_key] : _value for (_key, _value) in self.omega_data.items() if _key in self._mandatories }
+        print(out)
+        return out 
 
     def UnitTest(self):
         self.read_from_file(r'C:\Temp\case.json')
         self.print_data()
         self.get_data()     
 
-
-
+#o = OmegaJson()
+#o.UnitTest()

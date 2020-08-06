@@ -23,11 +23,14 @@ class EnvManager():
 
                 if os.environ.get('CRASHSCOPE') != latest:
                     os.environ['CRASHSCOPE'] = latest
+                    self._envs['CRASHSCOPE'] = latest
+                    self.save_genvs()
                     print(f'os.environ[\'CRASHSCOPE\'] is updated : {latest}')
             else:
                 pass
 
     def save_genvs(self):
+        print('In save_genvs()')
         try:
             with open(self._fyml, 'w') as file:
                 yaml.dump(self._envs, file)
@@ -38,23 +41,23 @@ class EnvManager():
             raise Exception(f'{self._fyml} is not present')
 
     def read_genvs(self):
+        print('In read_genvs()')
         if not os.path.exists(self._fyml):
             raise Exception(f'{self._fyml} is not present')
 
         try:
             with open(self._fyml, "r") as ymlfile:
-                _genv = yaml.load(ymlfile)
-
-            gitlist = [ _genv[section]['git'] for section in _genv if 'git' in _genv[section].keys() ]
-            print(gitlist)
-            return gitlist
+                _genv = yaml.load(ymlfile, Loader=yaml.FullLoader)
+                self._envs = _genv
+                print(_genv)
         except Exception as ERR:
             print('[CRITICAL]In _get_gits() : '+str(ERR))
 
     def TestUnit(self):
         self.find_latest_in_local()
-        self.save_genvs()
+        self.read_genvs()
 
-#e = EnvManager()
+e = EnvManager()
+e.TestUnit()
 #e.find_latest_in_local()
 #e.save_genvs()
