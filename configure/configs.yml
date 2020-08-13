@@ -1,0 +1,103 @@
+SERVERLIST:
+    "mbann-linux":
+        region: SD
+    "cnss-dstn":
+        region: SD
+    "DESKTOP-8VSH8PQ":
+        region: TEST
+
+OMEGA:
+    - r"\\open-cases-recently-modified-Wireless_Connectivity_Software.csv"
+    - r"\\open-cases-recently-modified-Wireless_Connectivity_Software.csv"
+    
+WORKSPACE: 
+    LOCAL : r"D:\DSTN"
+    NETWORK : DSTN
+
+DB:
+    HOST: '?'
+    USER: '?'
+    PWD: '?'
+    DBNAME : '?'
+    CHARSET : 'utf8'
+
+CHIPSETS:
+    CHIPSET_HELLIUM:
+        - 'MSM8998'
+        - 'SDM660'
+        - 'SDM630'
+        - 'SDM636'
+        - 'SDM845'
+        - 'SDM855'
+        - 'SM8150'
+        - 'SDM710'
+        - 'SDM670'
+        - 'SM6150'
+        - 'SDX50M + SM8150'
+        - 'SM7150'
+        - 'SM8250'
+        - 'SM6125'
+        - 'SM8150_SDX55'
+        - 'SM8150_SDX50M'
+        - 'SDX50M + SM8150 AC'
+        - 'SM8150P + SDX55M'
+        - 'SM8150P'
+        - 'SM8150 AC'
+        - 'NICOBAR'
+    CHIPSET_HST:
+        - 'SM8250_SDX55'
+        - 'SDX55'
+        - 'SM8250 + SDX55M'
+    CHIPSET_HSP:
+        - 'SM8350'
+        - 'LAHAINA'
+
+AOP:
+    HOYA:
+        - 'SDM845'
+        - 'SDM855'
+        - 'SDM855'
+        - 'SM8150'
+        - 'SDM710'
+        - 'SDM670'
+        - 'SM6150'
+        - 'SDX50M + SM8150'
+        - 'SM7150'
+        - 'SM8150P + SDX55M'
+        - 'SM8150P'
+        - 'SM8150 AC'
+        - 'SM6125'
+        - 'SM8250_SDX55'
+        - 'SM8250 + SDX55M'
+        - 'SM7250'
+        - 'SAIPAN'
+        - 'SM8350'
+        - 'LAHAINA'
+
+NOC:
+    NOC:
+        - 'MSM8998'
+        - 'SDM660'
+        - 'SDM630'
+        - 'SDM636'
+    NOCH:
+        - 'SDM845'
+        - 'SDM855'
+        - 'SDM855'
+        - 'SM8150'
+        - 'SDM710'
+        - 'SDM670'
+        - 'SM6150'
+        - 'SDX50M + SM8150'
+        - 'SM7150'
+        - 'SM6125'
+        - 'SM8150P + SDX55M'
+        - 'SM8150P'
+        - 'SM8150 AC'
+        - 'SM8250 + SDX55M'
+        - 'SM8250_SDX55'
+        - 'SM7250'
+        - 'SAIPAN'
+        - 'SM8350'
+        - 'LAHAINA'
+

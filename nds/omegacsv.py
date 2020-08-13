@@ -3,6 +3,7 @@
 import os
 import csv
 import re
+import panda as pd
 from datetime import datetime
 
 class OmegaCSV:
@@ -11,12 +12,18 @@ class OmegaCSV:
                             'OwnerName', 'OwnerEmail', 'OwnerLocation1', 'CreatedDate', \
                             'ProblemCode1', 'ProblemCode2', 'ProblemCode3', \
                             'CcChipset', 'TaxmanProductLine', 'Subject' ]
-        
-        self.file_csv = file_csv if os.path.exists(file_csv) else None
-        if self.file_csv is None:
-            raise Exception(f'{file_csv} is not present')
+
         self.chips_supported = config().chips_supported
 
+        if len(file_csv) == 1:
+            self.file_csv = file_csv if os.path.exists(file_csv) else None
+            if self.file_csv is None:
+                raise Exception(f'{file_csv} is not present')
+        else:
+            self.file_csv = file_csv 
+            for f in self.file_csv:
+                if not os.path.exists(f):
+                    raise Exception(f'{f} is not present')
         self.read()
 
     def __del__(self):
@@ -24,14 +31,20 @@ class OmegaCSV:
 
     def read(self):
         try:
-            self._rows = csv.DictReader(open(self.csv_file))
+            if len(file_csv) == 1:
+                self._rows = csv.DictReader(open(self.csv_file))
+            else:
+                # Use PD
+                df_merged = pd.concat([pd.read_csv(f, sep=',') for f in self.csv_file], ignore_index=True, sort=False)
+                self._rows = df_merged 
+
         except Exception as ERR:
             print('[CRITICAL] '+str(ERR))
 
     def _convert_date(self, date_in):
         #date_in = 'Mon Jun 22 23:52:43 PDT 2020'
 
-        s = re.search('(.*) (.*) (.*) (.*)\:(.*)\:(.*) (.*) (.*)', date_in)
+        g = re.search('(.*) (.*) (.*) (.*)\:(.*)\:(.*) (.*) (.*)', date_in)
         if g is None: 
             raise Exception('input is wrong')
         date = datetime.strptime(g.group(8)+'-'+g.group(2)+'-'+g.group(3), '%Y-%b-%d').strftime('%Y-%m-%d')

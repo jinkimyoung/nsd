@@ -18,7 +18,7 @@ class GitManager():
         # Read from YML and Get GIT List
         try:
             with open(self._yml, "r") as ymlfile:
-                _cfg = yaml.load(ymlfile)
+                _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
             gitlist = [ _cfg[section]['git'] for section in _cfg if 'git' in _cfg[section].keys() ]
             print(gitlist)
