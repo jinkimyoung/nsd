@@ -12,7 +12,9 @@ OMEGA:
     
 WORKSPACE: 
     LOCAL : r"D:\DSTN"
-    NETWORK : DSTN
+    NETWORK : 'DSTN'
+    CASES : 'CASES'
+    GITS  : 'GITS'
 
 DB:
     HOST: '?'

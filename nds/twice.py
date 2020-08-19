@@ -13,7 +13,6 @@ import EnvManager
 
 from jira.client import JIRA
 
-
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.warning('is when this event was logged.')
 
@@ -25,7 +24,10 @@ def check_all_dependency():
 
     # A. _check_directories
     list_dirs = [] 
-    list_dirs.append(self.top_local)
+    list_dirs.append(configs.local_top)
+    list_dirs.append(configs.local_cases)
+    list_dirs.append(configs.local_gits)
+
     _check_directories(list_dirs)
 
     # B. _check_mysql_connection
@@ -33,6 +35,12 @@ def check_all_dependency():
 
     # C. _check_jira_connection()
     _check_jira_connection(configs.rest_options, cnssbot)
+
+    # D. Update GITs
+    _gits_pull(configs.local_gits)
+
+    # E. Update LOCAL packages like QXDM / Crashscope
+    _update_tools()
 
     return
 
@@ -83,19 +91,15 @@ def _check_jira_connection(rest_options, account):
         raise Exception(str(ERR))
     return
 
+def _gits_pull(dst_top):
+    g = GitManager(dst_top)
+    g.update_latests()
+    return
 
-def _pull_gits():
-    g = GitManager(r'c:\temp')
-    g.TestUnit()
-
-
-
-
-
-
-env = EnvManager()
-env.update()
-
+def _update_tools():
+    env = EnvManager()
+    env.update()
+    return
 
 if __name__ == "__main__":
     print('aa)')

@@ -45,7 +45,7 @@ class DSTN():
 
     def _local_to_networkdrive(self, src):
         print(f'before : [{src}]')
-        src.replace(self.top_local, self.nwd_local, 1)
+        src.replace(self.local_top, self.network_top, 1)
         print(f'after : [{src}]')
         return src
 
@@ -216,8 +216,7 @@ class DSTN():
         # mail
 
         return         
-        
-         
+
 
     def _get_qxdm_dirlist(self):
         list_directory = []

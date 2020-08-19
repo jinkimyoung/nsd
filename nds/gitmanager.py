@@ -26,10 +26,10 @@ class GitManager():
         except Exception as ERR:
             print('[CRITICAL]In _get_gits() : '+str(ERR))
 
-    def update_latests(self, gitlist):
+    def update_latests(self):
+        gitlist = self._get_gits()
         for url_git in gitlist:
             self.git_clone_or_pull(url_git)
-        
         pass
 
     def git_clone_or_pull(self, url_git):

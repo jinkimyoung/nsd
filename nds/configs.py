@@ -47,9 +47,12 @@ class Configs():
 
         # PATH
         if self._cfg.get('WORKSPACE') != None:
-            self.top_local = self._cfg['WORKSPACE']['LOCAL']
-            self.nwd_local = os.path.join(r'\\', self.server, self._cfg['WORKSPACE']['NETWORK'])
-            print(f'{self.top_local}, {self.nwd_local}')
+            self.local_top = self._cfg['WORKSPACE']['LOCAL']
+            self.network_top = os.path.join(r'\\', self.server, self._cfg['WORKSPACE']['NETWORK'])
+            self.local_cases = os.path.join(self.local_top, self._cfg['WORKSPACE']['CASES'])
+            self.local_gits = os.path.join(self.local_top, self._cfg['WORKSPACE']['GITS'])
+
+            print(f'{self.local_top}, {self.network_top}, {self.local_cases}, {self.local_gits}')
         else:
             raise Exception('Key[WORKSPACE] is not present')
 
