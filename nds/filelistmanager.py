@@ -6,15 +6,15 @@ import sqlite3
 import subprocess
 
 class FileListManager:
-	def __init__(self, dsrc):
-		self._dsrc = dsrc if os.path.exists(dsrc) else None
+	def __init__(self, dsrc = None):
 
-		if self._dsrc is None:
-			raise Exception(f'Path is wrong - dsrc({dsrc})')
-
-		# DB
-		self._db = os.path.join(self._dsrc, 'FileListManager.db')
-		self._connect()
+        if dsrc != None:
+            # DB
+            self._dsrc = dsrc if os.path.exists(dsrc) else None
+            if self._dsrc is None:
+                raise Exception(f'Path is wrong - dsrc({dsrc})')
+            self._db = os.path.join(self._dsrc, 'FileListManager.db')
+            self._connect()
 
 		##  extentions of files
 		self.subtechs	= ( 'GPS' , 'BT' , 'WLAN' )
@@ -24,7 +24,7 @@ class FileListManager:
 		self.set_skip = set(self.set_image + self.set_code + self.set_etc)
 
 		# NEED to pair in categorize()
-		self.set_elf	= ( 'ELF_APSS', 'ELF_WLAN_FW', 'ELF_WLAN_HOST', 'ELF_MPSS_ROOTPD', 'ELF_MPSS_ELFLOADER', 'ELF_MPSS_CORE', 'ELF_AOP' )
+		self.set_elf	= ( 'ELF_APSS', 'ELF_WLAN_FW_INT', 'ELF_WLAN_FW_DIST', 'ELF_WLAN_HOST', 'ELF_MPSS_ROOTPD', 'ELF_MPSS_ELFLOADER', 'ELF_MPSS_CORE', 'ELF_AOP' )
 		self.set_dump	= ('SSR', 'FULLR', 'PDR', 'BTR')
 		self.set_qxdm	= ('ISF')
 		self.set_tomb	= ('BUGREPORT', 'TOMBSTONE')
@@ -64,7 +64,9 @@ class FileListManager:
 		elif re.match(r'.*vmlinux.*', fname):
 			type = 'ELF_APSS'
 		elif re.match(r'WLAN_MERGED.*\.elf', fname):
-			type = 'ELF_WLAN_FW'
+			type = 'ELF_WLAN_FW_INT'
+        elif re.match(r'CNSS_RAM_V\d_TO_LINK_PATCHED_.*wlanfw.eval_v\d_TOQ_link\.elf', fname):
+            type = 'ELF_WLAN_FW_DIST'
 		elif re.match(r'qca_cld3_wlan\.ko.*\.unstripped', fname):
 			type = 'ELF_WLAN_HOST'
 		elif re.match(r'orig_MODEM_PROC_IMG_.*\.prodQ.*\.elf', fname):
@@ -156,6 +158,67 @@ class FileListManager:
 	def _create_syncdb(self):
 		self._cursor.execute('CREATE TABLE IF NOT EXISTS flist(path text UNIQUE, size int)')
 
+    def _get_dstname(self, fname):
+        ftype = self.get_ftype(fname)
+        if ftype == 'BTR':
+            v = re.search('ramdump_bt_fw_crashdump_(.*).bin', fname)
+            if v != None:
+                return v.group(1)
+            v = re.search('(.*)-bt_fw_crashdump.bin', fname)
+            if v != None:
+                return v.group(1)
+        elif ftype == 'SSR':
+            v = re.search('ramdump_modem_(.*).elf', fname)
+            if v != None:
+                return v.group(1)
+            v = re.search('ramdump_wlan_(.*).elf', fname)
+            if v != None:
+                return v.group(1)
+            return fname
+        elif ftype == 'PDR':
+            v = re.search('ramdump_wlan_(.*).elf', fname)
+            if v != None:
+                return v.group(1)
+        return fname
+
+    def shuffle_ramdumps(self):
+        # shuffle ramdumps when there are multiple files 
+        map_directory = {}
+        list_dump = self._list_dump
+        list_dump.sort()
+
+        for dfile in list_dump:
+            key = os.path.dirname(dfile)
+            if map_directory.get(key) == None:
+                map_directory[key] = 0
+            else
+                map_directory[key] = map_directory[key] + 1
+
+        for key in map_directory.keys():
+            if map_directory[key] != 0:
+                self.move_to_subdir(key)
+
+        retval = os.system('sync')
+        retval = os.system('sync')
+        return
+        
+    def move_to_subdir(self, dst):
+        # flist
+        flist = [for f in os.listdir(dst) if os.path.isfile(os.path.join(dst, f)) and self.get_ftype(f) in ('SSR', 'PDR', 'BTR') ]
+
+        for fname in flist:
+            dname = self._get_dstname(fname)
+            try:
+                os.mkdir(os.path.join(dst, dname), 0o777)
+                old_path = os.path.join(dst, fname)
+                new_path = os.path.join(dst, dname, fname)
+                print(f'{old_path} moves to {new_path}')
+                shutil.move(old_path, new_path)
+                self._list_dump.remove(old_path)
+                self._list_dump.add(new_path)
+            except Exception as ERR:
+                print('[CRITICAL]In move_to_subdir() : '+str(ERR))
+       
 	def TestCase(self):
 		top = r'C:\Temp\nsd'
 		category = os.path.join(top, 'category')
@@ -178,6 +241,5 @@ class FileListManager:
 		self.__init__(top)
 		self.determinte_files_to_analyze()
 
-
-f = FileListManager(r'C:\Temp\nsd')
-f.TestCase()
+#f = FileListManager(r'C:\Temp\nsd')
+#f.TestCase()

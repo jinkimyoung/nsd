@@ -10,6 +10,9 @@ class EnvManager():
         self._top =  os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
         self._fyml = os.path.join(self._top, 'configure', 'envs.yml')
         self._envs = { 'CRASHSCOPE' : r'C:\\ProgramData\\QUALCOMM\\Crashscope\\1.5.40.33', 'QXDM4' : r'C:\Program Files (x86)\Qualcomm\QXDM4' }
+
+    def update(self):
+        self.read_genvs()
         self.find_latest_in_local()
 
     def find_latest_in_local(self):
@@ -54,10 +57,11 @@ class EnvManager():
             print('[CRITICAL]In _get_gits() : '+str(ERR))
 
     def TestUnit(self):
-        self.find_latest_in_local()
         self.read_genvs()
+        self.find_latest_in_local()
 
-e = EnvManager()
-e.TestUnit()
+
+#e = EnvManager()
+#e.TestUnit()
 #e.find_latest_in_local()
 #e.save_genvs()

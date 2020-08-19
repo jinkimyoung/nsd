@@ -101,3 +101,6 @@ NOC:
         - 'SM8350'
         - 'LAHAINA'
 
+JIRA_RESTOPT:
+    'server' : 'https://jira-stability-tools.xxx.com/jira'
+    'verify' :False

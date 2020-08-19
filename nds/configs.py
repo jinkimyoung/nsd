@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import yaml
 import platform
@@ -61,6 +63,12 @@ class Configs():
             print(self.chipsets)
         else:  
             raise Exception('Key[CHIPSETS] is not present')
+
+        if self._cfg.get('JIRA_RESTOPT') != None:
+            self.rest_options = self._cfg['JIRA_RESTOPT']
+            print(self.rest_options)
+        else:
+            raise Exception('Key[JIRA_RESTOPT] is not present')
 
     def get_mysql(self):
         if self._cfg.get('DB') != None:
